@@ -1,0 +1,48 @@
+name: CI/CD with Docker
+
+on:
+  push:
+    branches:
+      - main  # Déclenche le workflow lorsque des commits sont poussés sur la branche main
+  pull_request:
+    branches:
+      - main  # Déclenche le workflow lorsque des pull requests sont ouvertes vers la branche main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout du code
+      uses: actions/checkout@v2
+
+    - name: Connexion à Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Construire l'image Docker
+      run: docker build -t loriclannister/simple-web-app:latest .
+      working-directory: .
+
+    - name: Tester l'image Docker
+      run: docker run loriclannister/simple-web-app:latest npm test
+
+    - name: Pousser l'image Docker vers Docker Hub
+      run: docker push loriclannister/simple-web-app:latest
+    # - name: Installer les dépendances
+    #   run: npm install
+    # - name: Lancer les tests
+    #   run: npm test
+    # - name: Lançer l'application
+    #   run: npm start
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    needs: build  # Attend que le job 'build' soit terminé avec succès
+
+    steps:
+    - name: Déploiement sur le serveur de production
+      run: |
+        scp -r ./dist user@production-server:/path/to/deploy  # Exemple de déploiement via SCP, ajustez selon votre méthode de déploiement
+    # Vous pouvez ajouter d'autres étapes de déploiement ici, comme la mise à jour de la base de données, l'envoi de notifications, etc.
