@@ -14,6 +14,12 @@ jobs:
     - name: Checkout du code
       uses: actions/checkout@v2
 
+    - name: Installer les dépendances
+      run: npm install
+    - name: Lancer les tests
+      run: npm test
+      continue-on-error: false
+
     - name: Connexion à Docker Hub
       uses: docker/login-action@v2
       with:
@@ -21,20 +27,11 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Construire l'image Docker
+      if: success()  # Condition : construire l'image seulement si les tests réussissent
       run: docker build -t loriclannister/simple-web-app:latest .
-      working-directory: .
-
-    - name: Tester l'image Docker
-      run: docker run loriclannister/simple-web-app:latest npm test
 
     - name: Pousser l'image Docker vers Docker Hub
       run: docker push loriclannister/simple-web-app:latest
-    # - name: Installer les dépendances
-    #   run: npm install
-    # - name: Lancer les tests
-    #   run: npm test
-    # - name: Lançer l'application
-    #   run: npm start
 
   deploy:
     runs-on: ubuntu-latest
