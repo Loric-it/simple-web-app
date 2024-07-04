@@ -36,14 +36,3 @@ jobs:
 
     - name: Pousser l'image Docker vers Docker Hub
       run: docker push loriclannister/simple-web-app:latest
-
-  # deploy:
-  #   runs-on: ubuntu-latest
-
-  #   needs: build  # Attend que le job 'build' soit terminé avec succès
-
-  #   steps:
-  #   - name: Déploiement sur le serveur de production
-  #     run: |
-  #       scp -r ./dist user@production-server:/path/to/deploy  # Exemple de déploiement via SCP, ajustez selon votre méthode de déploiement
-    # Vous pouvez ajouter d'autres étapes de déploiement ici, comme la mise à jour de la base de données, l'envoi de notifications, etc.
