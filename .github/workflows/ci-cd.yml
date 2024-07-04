@@ -3,10 +3,10 @@ name: CI/CD with Docker
 on:
   push:
     branches:
-      - main  # Déclenche le workflow lorsque des commits sont poussés sur la branche main
+      - master  # Déclenche le workflow lorsque des commits sont poussés sur la branche main
   pull_request:
     branches:
-      - main  # Déclenche le workflow lorsque des pull requests sont ouvertes vers la branche main
+      - master  # Déclenche le workflow lorsque des pull requests sont ouvertes vers la branche main
 jobs:
   build:
     runs-on: ubuntu-latest
